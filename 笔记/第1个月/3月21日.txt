@@ -1,0 +1,10 @@
+        1.关联文章，关联商品选择可选文章选不了暂时，报错bug：TypeError: selOpt.toJSONString is not a function 影响后面选项卡数据的获取
+
+逻辑思考 2.content->title->cat_id->article_id
+goods_id->article_id
+cat_id->cat_name 
+由cat_name查询cat_id;
+由goods_id查询article_id，会有两篇文章,
+查询ecs_goods_article表 
+
+        3.

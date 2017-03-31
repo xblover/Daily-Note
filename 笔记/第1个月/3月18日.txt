@@ -1,0 +1,161 @@
+1.修改后台bug
+OK了哈哈哈。。  商店设置，邮件服务器设置显示不出来bug修复
+OK            支付bug修复
+ok     后台首页xmlhttprequest status:[500] unknow staus 的bug修复
+  
+2. 商品详情页面需求
+分析中   商品图片放大
+OK        sku中间的板块去掉，移到商品名称下面
+zero   商品详情，评价，热销板块修改
+
+后续需求：
+用户可以实现微信登录
+
+
+
+支付bug修复
+问题1：ecshop出现警告：Strict standards: Redefining already defined constructor for class 
+解答
+从PHP5.4开始，对这两个函数出现的顺序做了最严格的定义，必须是 __construct() 在前，同名函数在后
+
+
+问题2：密码字段出现在一个不安全的 http:// 页面中。这是一个可能导致用户登录凭据被窃取的安全风险。
+解答
+为什么会报个这错误呢！ 密码字段 出现在一个不安全的 http:// 页面中！
+
+因为现在提交的密码还是明文的，黑客们可以通过网络嗅探之类的技术，得到这个明文密码，从而导致密码失窃！
+
+即然是明文密码，那么我们在提交数据之前就把密码加密，是不是就可以了呢！
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>RSA Login Test</title>
+    <script src="Scripts/jQuery-1.4.1.js" type="text/JavaScript"></script>
+    <script src="Scripts/jQuery.md5.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+     $(document).ready(function () {
+            $('#btnLogin').click(function () {
+                var pwdMd5 = $.md5($("#txtpassword").attr("value"));
+                $("#txtpassword").attr("value", pwdMd5);
+            });
+        })
+    </script>
+
+</head>
+<body>
+    <form action="Default.aspx" id="formLogin" method="post">
+    <div>
+        <div>
+            User Name:
+        </div>
+        <div>
+            <input id="txtUserName" name="txtUserName"  type="text" maxlength="16" />
+        </div>
+        <div>
+            Password:
+        </div>
+        <div>
+            <input id="txtpassword" type="password" maxlength="16" />
+        </div>
+        <div>
+            <input id="btnLogin" type="button" value="Login" onclick="return cmdEncrypt()" />
+        </div>
+    </div>
+    <div>
+    </div>
+    </form>
+</body>
+</html>
+
+问题3：后台首页xmlhttprequest status:[500] unknow staus 的bug修复
+如果PHP是高版本的话，改一下函数调用
+
+有个cloud.php，里面有一个mktime()，改为time()，就解决了。
+
+ 解决办法：
+
+找到/admin/templates/top.htm 这个文件
+
+然后删除下面的代码即可:
+
+<script type=”text/javascript”>
+onload = function()
+{
+Ajax.call(‘index.php?is_ajax=1&act=license’,”, start_sendmail_Response, ‘GET’, ‘JSON’);
+}
+
+function web_address()
+{
+var ne_add = parent.document.getElementByIdx_x(‘main-frame’);
+var ne_list = ne_add.contentWindow.document.getElementByIdx_x(’search_id’).innerHTML;
+ne_list.replace(‘-’, ”);
+var arr = ne_list.split(‘-’);
+window.open(‘help.php?al=’+arr[arr.length - 1],’_blank’);
+}
+
+
+function start_sendmail_Response(result)
+{
+// 运行正常
+if (result.error == 0)
+{
+var str = ”;
+if (result['content']['auth_str'])
+{
+str = ‘<a href=”javascript:void(0);” target=”_blank”>’ + result['content']['auth_str'];
+if (result['content']['auth_type'])
+{
+str += ‘[' + result['content']['auth_type'] + ‘]’;
+}
+str += ‘</a> ‘;
+}
+
+document.getElementByIdx_x(‘license-div’).innerHTML = str;
+}
+}
+
+function modalDialog(url, name, width, height)
+{
+if (width == undefined)
+{
+width = 400;
+}
+if (height == undefined)
+{
+height = 300;
+}
+
+if (window.showModalDialog)
+{
+window.showModalDialog(url, name, ‘dialogWidth=’ + (width) + ‘px; dialogHeight=’ + (height+5) + ‘px; status=off’);
+}
+else
+{
+x = (window.screen.width – width) / 2;
+y = (window.screen.height – height) / 2;
+
+window.open(url, name, ‘height=’+height+’, width=’+width+’, left=’+x+’, top=’+y+’, toolbar=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, modal=yes’);
+}
+}
+
+function ShowToDoList()
+{
+try
+{
+var mainFrame = window.top.frames['main-frame'];
+mainFrame.window.showTodoList(adminId);
+}
+catch (ex)
+{
+}
+}
+{/literal}
+
+var adminId = “{$admin_id}”;
+</script> 
+
+
+
+
+tip：昨天商店设置的bug一直解决不了，搞了一下午没解决，今天早上修复支付的bug完成后，点击商店设置又好了，好神奇。。。。。。哈哈哈，无心插柳柳成荫。哈哈哈 

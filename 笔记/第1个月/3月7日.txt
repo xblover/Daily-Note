@@ -1,0 +1,8 @@
+学习 1.ecshop的数据库getRow、getAll、getOne区别
+http://www.cnblogs.com/shangxia/p/3410418.html
+
+OK 2,商品详情页修改，会员价下面的商品sku尽量让内容和标题同一行
+
+a little3. 商品详情，作者详情显示出来
+
+4, http://growth.phodal.com/#全栈工程师是未来

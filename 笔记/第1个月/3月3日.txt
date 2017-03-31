@@ -1,0 +1,8 @@
+1.ECShop开发资料大致看了一下
+2.资讯页面简单搭建
+3,ECShop后台管理菜单显示、隐藏、修改、增加
+后台管理菜单修改相关文件有两个：
+菜单项：admin\includes\inc_menu.php
+菜单文本：languages\zh_cn\admin\common.php
+inc_menu.php文件用于管理菜单数量、显示顺序、链接等，该文件内容形如：
+common.php 用于修改菜单文本

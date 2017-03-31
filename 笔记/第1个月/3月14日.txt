@@ -1,0 +1,12 @@
+ok 1.网站部署
+交付同事   2.任我行crm协同工具安装
+有时间再看 3，svn代码版本管理工具配置
+4.解决网站详情页数据库方面的bug
+
+MySQL 数据库
+xiangyizisha  为现在用的数据库
+xaingyizisha1  小米模板数据库，查看字段
+
+需要把xaingyizisha1上的数据及数据关系转移到xiangyizisha里面
+
+

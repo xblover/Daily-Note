@@ -1,0 +1,55 @@
+love:key:xy12345678
+目标：作者详情、泥料/器型详情
+
+问题：如何去掉2.7中乱跑的Powered by ECShop?
+ecshop2.7正式版已经出来了
+
+因此我也第一时间升级了 我以前所使用的是2.6.2版的ecshop
+
+不过升级后才发现很后悔了， ecshop 用很很复杂的手段 加了版权加密
+
+如果您按照旧版本删除版权的方法去删除 版权链接依然会继续出现，而且也会乱飞
+
+听别人说，去版权相关的技术文章一旦发表在官方论坛 不过几分钟就会被删除掉 而且会封号处理
+
+有点严厉了~
+
+我在博客里公布出来的去版权方法(我只是玩个叛逆并不提倡去版权哦)
+
+(第一步)首先 下载修改过的js文件 复制到 ecshop目录里的JS文件夹里，我这里用的utf-8编码，需要改编码的自己记得去转换哦
+
+包含附件:
+
+请到以下地址下载:http://www.jonely.cn/blog/Blogs/web/200908/20090804120314.Html
+
+(第二步)比较重要的，删除顶部标题栏"Powered by Ecshop"信息:
+使用文本编辑器(推荐UltraEdit)打开 ecshop根目录/includes/lib_main.php, 找到如下代码,然后自己找到对应的内容改掉就行了:
+
+/* 初始化“页面标题”和“当前位置” */
+$page_title = $GLOBALS['_CFG']['shop_title'] . ' - ' . 'Powered by JoNeLy.Cn';
+$ur_here = '<a href="." mce_href=".">' . $GLOBALS['_LANG']['home'] . '</a>';
+
+(第三步)更重要，找到includes文件夹的 cls_ecshop.php
+再找以下代码，以下代码我修改过，你修改成自己的文字就可以了,如果你用了ecshop助手的话,建议不要改这里,改了会用不到ecshop助手
+
+define('APPNAME', 'JoNeLy.Cn');
+define('VERSION', 'v2.0');
+define('RELEASE', '20090720');
+
+以上就是我修改的过程方法，还有一个地方也需要改的，最好也修改一下，路径languages/zh_cn/common.php
+
+找到以下代码，下面是我修改过的，还未修改的代码是有ecshop的地址和名字的，而且名字不是一次过显示排列的，而是分开来排列，自己摸索也应该不难
+
+$_LANG['p_y']['link_start'] = '<a href="http://www.jonely.cn" target="_blank" style=" font-family:Verdana; font-size:11px;">';
+$_LANG['p_y']['link_p'] = 'Powe';
+$_LANG['p_y']['link_r'] = 'red ';
+$_LANG['p_y']['link_b'] = 'by ';
+$_LANG['p_y']['main_start'] = '<strong><span style="color: #3366FF">';
+$_LANG['p_y']['main_e'] = 'J';
+$_LANG['p_y']['main_c'] = 'oNeLy';
+$_LANG['p_y']['main_p'] = '.Cn</span> ';
+$_LANG['p_y']['v_s'] = '<span style="color: #FF9966">';
+$_LANG['p_y']['v'] = VERSION;
+$_LANG['p_y']['link_end'] = '</span></strong></a> ';
+
+以上就是完整的修改方法了，绝对完全可以完美无错修改，有空也访问一下我的网站 www.jonely.cn

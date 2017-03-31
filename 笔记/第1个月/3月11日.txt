@@ -1,0 +1,11 @@
+OK 1.ECSHOP info: Can't Connect MySQL Server(localhost:3306)!
+ Navicat连接mysql出现2003——can't connect to mysql server on localhost(10061)
+早上起来网站出现了这个错误，
+解决方案：百度了一下查看原因原来是MySQL服务没有启动，
+右键‘计算机’---->管理--->服务和应用程序---->服务，在右侧的栏目中找到名称为MYSQL的服务。这个时候他的状态应该是空，即未启动，启动此服务就OK了。
+2，ECShop admin后台商品部分突然不能修改信息了
+解决方案：
+查看控制台输出发现是这个问题
+uncaught exception: transport.js/parseResult() error: can't parse to JSON.
+分页，搜索，修改商品信息都出现这个错误
+
