@@ -1,0 +1,166 @@
+图片服务器
+图片分离
+
+网站负载均衡
+
+页面静态化
+
+优化页面响应时间的方法： 
+动态页面静态化 （实质是生成静态html文件） 
+优化数据库 
+使用负载均衡 
+使用缓存 
+
+
+网站开发技术，零碎化比较严重，所以要有聚沙成塔的精神，把一点一点的功能性知识都应用在网站上；才能把网站做大做好；
+
+
+被熟知的架构是web负载均衡+数据库主从+缓存+分布式存储+队列
+
+
+对普通网站有一个统一的思路，就是尽量向前端优化、减少数据库操作、减少磁盘IO。
+
+向前端优化指的是，在不影响功能和体验的情况下，能在浏览器执行的不要在服务端执行，能在缓存服务器上直接返回的不要到应用服务器，程序能直接取得的结果不要到外部取得，本机内能取得的数据不要到远程取，内存能取到的不要到磁盘取，缓存中有的不要去数据库查询。
+减少数据库操作指减少更新次数、缓存结果减少查询次数、将数据库执行的操作尽可能的让你的程序完成（例如join查询），减少磁盘IO指尽量不使用文件系统作为缓存、减少读写文件次数等。程序优化永远要优化慢的部分，换语法是无法“优化”的。
+
+然而编程时不应该把重点放在优化上，应该关注扩展性。当今的WEB应用，需求变化非常之快，适应多种需求的架构是不存在的，我们的扩展性就要把要点放在跟底层交互的架构上，例如持久化数据的存取规则、缓存的存取规则等，还有一些共用服务，例如用户信息等。先把不变的部分做完善，剩下的部分就很容易将精力放在业务逻辑上面了。
+
+
+
+OK 首页幻灯片弄的更好更完美了
+OK 文章列表页参考别人的样式上好看一些了
+
+优化页面响应时间
+动态页面静态化
+优化数据库
+使用负载均衡
+使用缓存
+
+如果页面中一些内容不经常改动，动态页面静态化是非常有效的加速方法
+实质：生成静态页面
+
+
+PHP文件语法分析--编译--运行--展现
+静态文件直接展现
+
+好处：
+减少服务器计算时间
+
+
+不适用于：
+内容经常变换的应用比如微博;
+
+
+
+关于动态URL地址设置静态形式
+
+http://state.com/index.php?c=play&a=index&id=812591
+--->
+http://state.com/play/812591.shtml
+
+
+静态化介绍
+
+PHP静态化：
+1，纯静态：局部纯静态；全部纯静态
+2，伪静态
+
+纯静态化实现
+buffer认知
+buffer概述：
+buffer其实就是缓冲区，一个内存地址空间，主要用于存储数据区域
+
+输出流程
+内容--》PHP buffer -》tcp -->终端
+
+output_buffering;开启，开启PHP缓存 或者 ob_start()
+ob_get_contents();获取PHP缓存区中的数据
+
+PHP如何实现页面纯静态化
+基本方式
+1.file_put_contents()函数  将字符串写入文件
+2，使用PHP内置缓存机制实现页面静态化--output_buffering
+
+fopen()
+fwrite()
+fclose()
+
+
+OB函数
+ob_start  打开输出控制缓冲
+ob_get_contents  返回输出缓冲区内容
+ob_clean   清空输出缓冲区
+ob_get_clean 得到当前缓冲区的内容并删除当前输出缓冲区
+
+全部纯静态化案例
+
+学习目标
+掌握如何生成静态页面
+
+1.链接数据库，然后从数据库里面获取数据
+2，把获取到是数据填充到模板文件里面
+3，需要把动态的页面转化为静态页面，生成纯静态化文件
+if(is_file('./index.shtml')&&(time()-filemtime('./index.shtml'))<300){
+	require_once('./index.shtml');
+}else{
+	require_once('./db.php');
+	$connect = Db::getInstance()->connect();
+	$sql = "select * from news where 'category_id'= 1 and 'status'=1 order by id desc limit 5";
+	$res = mysql_query($sql,$connect);
+
+	while($row = mysql_fetch_array($res)){
+		$news[] = $row;
+	}
+	ob_start();
+	//引入模板文件
+	require_once('./templates/singwa.php');
+	file_put_contents('index.shtml',ob_get_contents())
+	/*
+	if(file_put_contents('index.shtml',ob_get_clean())){
+		echo "success";
+	}else{
+		echo "error";
+	}*/
+}
+如何触发系统生成纯静态化页面
+1.页面添加缓存时间
+用户请求页面-》页面时间是否过期—>若是，动态页面并生成一份新的静态页面
+若否，获取静态页面
+见上程序！！！
+2，手动触发方式
+后台写一块功能，手动更新静态页面
+更新模块生成HTML静态页面
+模块|操作
+首页|预览|开始更新
+
+3，crontab定时扫描程序
+
+局部动态化案例实现
+静态化页面中如果想加载动态的内容如何处理？
+实现步骤：
+编写接口；
+ajax请求接口操作
+
+排行榜接口数据
+1.获取数据，2，把我们获取到的数据组装成接口数据及通信
+require_once('../db.php');
+$connect = Db::getInstance()->connect();
+$sql = "select * from hit as a join news as b on a.news_id = b.id order by a.count desc limit 3";
+$result = mysql_query($sql,$connect);
+while($row  = mysql_fetch_assoc($result)){
+    $res[] = $row;
+}
+
+show(1,'success',$res);
+
+function show($code = 0,$message = ‘error’，$data = array()){
+	$result = array(
+	'code'=>$code;
+	'message'=>$message;
+	‘data’=>$data,
+)
+}
+echo json_encode($result);
+
+
+   东去春来十六载，黄花正年少。腰身壮胆气豪，常连武勤操劳。耕田放牧打豺狼，风雨一肩挑一肩挑。

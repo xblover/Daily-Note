@@ -1,0 +1,32 @@
+我的订单，订单状态按选项卡的方式分为：“未付款”“未收货”“已收货”
+   	订单跟踪：如果无快递信息，采用弹窗模式提示用户
+   	订单状态：已确认，已付款，商品将在48小时内发货改为系统红色；
+	订单编号；下单时间；订单金额颜色改为黑色；其中金额数字改为红色；
+
+
+
+
+
+
+
+<!-- #BeginLibraryItem "/library/cat_articles.lbi" -->
+
+<!--循环品牌下商品 begin-->
+<div class="blank2"></div>
+<section class="item_show_box1 box1 region">
+    <header>
+        <span>
+            网站公告
+        </span>
+    </header>
+ <div class="clearfix article-list" style="padding:0px 20px; padding-bottom:10px;">
+  <!--{foreach from=$new_articles item=goods name=brand_goods}--> 
+    <li><a href="{$goods.url}" title="{$goods.title}">{$goods.title}</a></li>
+	 <!--{/foreach}-->   
+    </div>
+        
+</section>
+<!--循环分类下商品end-->
+<!-- #EndLibraryItem -->
+
+

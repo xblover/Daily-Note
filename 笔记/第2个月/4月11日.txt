@@ -1,0 +1,75 @@
+已配好两台 1.办公室工作电脑管理，已配好两台
+已可测试   2.网站短信接入:阿里大于 
+App Key: 23749212
+App Secret: 9040e5bd0207d9684c22c35121996801
+
+
+
+//引入阿里大于SDK
+	include "/taobao-sdk-PHP/TopSdk.php";
+
+	$c = new TopClient;
+	//请填写自己的app key
+	$c->appkey = "23749212";
+	//请填写自己的app secret
+	$c->secretKey = "9040e5bd0207d9684c22c35121996801";
+
+	$req = new AlibabaAliqinFcSmsNumSendRequest;
+	$req->setExtend("123456");
+	$req->setSmsType("normal");
+	$req->setSmsFreeSignName("大鱼测试");
+	$req->setSmsParam("{\"code\": \"888888\", \"product\": \"阿里大于(http://www.alidayu.com)\"}");
+	//请填写需要接收的手机号码
+	$req->setRecNum("18321713715");
+	//短信模板id
+	$req->setSmsTemplateCode("SMS_61215057");
+
+	$resp = $c->execute($req);
+
+
+protected function sendDayuSmsPlus($tel,$type,$data) {
+	
+	switch($type) {
+         case 'register':
+		 	 $signname = "";
+			 $templatecode = "";
+             $req->setSmsParam('{"name":"'. $data['name'] .'"}');
+         break;
+         case 'activity':
+             $req->setSmsParam('{"name":"'. $data['name'] .'","product":"'. $data['product'] .'"}');
+         break;
+         default:
+             $req->setSmsParam('{"code":"'. $data['code'] .'","product":"'. $data['product'] .'"}');
+    }
+	$dayu_template = 'dayu_template_'.$type;
+    $signname = C($dayu_template.".signname");
+    $templatecode = C($dayu_template.".templatecode");
+       //引入阿里大于SDK
+	include_once "../taobao-sdk-PHP/TopSdk.php";
+    
+	$c = new TopClient;
+    $c->appkey =  "23749212";
+    $c->secretKey = "9040e5bd0207d9684c22c35121996801";
+    
+	$req = new AlibabaAliqinFcSmsNumSendRequest;
+    $req->setSmsType("normal");
+    $req->setSmsFreeSignName("{$signname}");
+
+    switch($type) {
+         case 'sold':
+             $req->setSmsParam('{"name":"'. $data['name'] .'"}');
+         break;
+         case 'buysuccess':
+             $req->setSmsParam('{"name":"'. $data['name'] .'","product":"'. $data['product'] .'"}');
+         break;
+         case 'newagent':
+             $req->setSmsParam('{"name":"'. $data['name'] .'"}');
+         break;
+         default:
+             $req->setSmsParam('{"code":"'. $data['code'] .'","product":"'. $data['product'] .'"}');
+     }
+     $req->setRecNum("{$tel}");
+     $req->setSmsTemplateCode("{$templatecode}");
+     $resp = $c->execute($req);
+     return $resp;
+}

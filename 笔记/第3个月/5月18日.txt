@@ -1,0 +1,117 @@
+1.会员中心：
+   OK  积分记录变化时间：去掉时分秒；备注改为积分说明；
+   OK  会员中心下的“会员余额”中的项目文字冲乱了，排列整齐；下方的操作记录用表格（表格线浅一些）的方式排列整齐，如果排不下可去掉一列（管理员备注）      
+       添加我的拍卖，能添加就添加，或者加订单标志注为我的拍卖   
+
+2.我的订单，订单状态按选项卡的方式分为：“未付款”“未收货”“已收货”
+   	订单跟踪：如果无快递信息，采用弹窗模式提示用户
+   	订单状态：已确认，已付款，商品将在48小时内发货改为系统红色；
+	订单编号；下单时间；订单金额颜色改为黑色；其中金额数字改为红色； 
+
+3，商城页按效果图进行修改调整；
+4，紫砂知识页（阅读页）参照效果图进行完善；
+样式代码移到相应的位置了：差提取数据了5，网站公告移至首页新壶专区下面；
+6，#E71F17
+
+
+
+
+
+user agent stylesheet是浏览器的一些默认样式。如果对这个默认样式不满意最简单的解决办法就是重新设置该样式的属性，因为user agent stylesheet优先级很低，会被覆盖，
+
+
+
+分析ECShop $_CFG系统参数数组
+$_CFG数组主要放置一些系统参数，并且全站共享的数据，在使用的时候，ECShop里面常常以$GLOBALS['_CFG']全局变量的模式来处理。 ecshop的$ GLOBALS ['_ CFG']，主要是在includes / init.php中出现并且初始化，$ _ CFG = load_config（）; load_config（）函数负责将参数取出来.includes \ lib_common.php文件中包含了这个ECSHOP函数。
+
+
+<!-- #BeginLibraryItem "/library/recommend_best.lbi" -->
+
+<!-- {if $best_goods} -->
+<style type="text/css">
+.picScroll3{ margin:10px auto; text-align:center;  }
+.picScroll3 .bd ul{ width:100%;  float:left; padding-top:10px;  }
+.picScroll3 .bd li{ width:50%; float:left; font-size:14px; text-align:center;  }
+.picScroll3 .bd li a{-webkit-tap-highlight-color:rgba(0, 0, 0, 0); /* 取消链接高亮 */ }
+.picScroll3 .bd li img{ width:150px; height:150px; }
+.picScroll3 .hd{display:None}
+
+.picScroll3 .bd1 ul{ width:100%;  float:left; padding-top:10px;  }
+.picScroll3 .bd1 li{ width:50%; float:left; font-size:14px; text-align:center;  }
+.picScroll3 .bd1 li a{-webkit-tap-highlight-color:rgba(0, 0, 0, 0); /* 取消链接高亮 */ }
+.picScroll3 .bd1 li img{ width:150px; height:150px; }
+</style>
+<div class="blank2"></div>
+<div class="item_show_box2 box1 region" style="overflow:hidden">
+
+    <div id="picScroll3" class="picScroll3">
+        <div class="hd">
+            <ul></ul>
+        </div>
+        <div class="bd1">
+            <ul>
+                <!--{foreach from=$best_goods item=goods name=best_goods}-->
+                <li><a href="{$goods.url}"><img src="{$site_url}{$goods.thumb}" /></a>
+                <br/>
+                <!-- {if $goods.promote_price neq ""} --> 
+				<font style="font-size:8px">市场价</font><del style="font-size: .675rem;">{$goods.market_price}</del>
+                <span class="price_s"> {$goods.promote_price} </span> 
+                <!-- {else}--> 
+				<font style="font-size:8px">市场价</font><del style="font-size: .675rem;">{$goods.market_price}</del>
+                <span class="price_s"> {$goods.shop_price} </span>
+				
+                <!--{/if}-->
+                <br>{$goods.name|escape:html|truncate:12}
+                </li>
+                <!--{if $smarty.foreach.best_goods.iteration%2 eq 0 && $smarty.foreach.best_goods.iteration neq $smarty.foreach.best_goods.total}--></ul><ul><!--{/if}-->
+                <!--{/foreach}-->
+        </div>
+    </div>
+
+    <div class="position_a_lt">
+      <div> </div>
+      <a href="search.php?intro=best">
+      <p> 精品 </p>
+      <p class="ico_04"> </p>
+      </a> </div>
+    <div class="position_a_rb">
+      <div> </div>
+      <a href="search.php?intro=best">
+      <p class="ico_04_b"> </p>
+      <p> 更多 </p>
+      </a> </div>
+  </div>
+
+<script type="text/javascript">
+TouchSlide({
+    slideCell:"#picScroll3",
+    titCell:".hd ul", //开启自动分页 autoPage:true ，此时设置 titCell 为导航元素包裹层
+    autoPage:true, //自动分页
+    pnLoop:"false", // 前后按钮不循环
+    //switchLoad:"_src" //切换加载，真实图片路径为"_src" 
+});
+</script>
+<!-- {/if} -->
+ <!-- #EndLibraryItem -->
+
+其他：
+生活中学会释放压力
+   生活中，压力无处不在，学会释放压力您就学会了生活。从某种意义上讲，生病本身，也是身体在压力累积之后的一种自我放松与修复的表现，包括由生病的方式所做的排毒。
+   我们需要学会将压力减少到最小的放松技术，因为压力无处不在，并且在不断地积累。
+   逃避所有的压力谁也做不到，就像我们知道空气污染却还得呼吸空气一样。寻找减少压力的方法，避免压力给我们造成大的伤害。
+   压力存在于生活的各个层面，只要我们生活就必须面对。唯一的办法就是学会在导致机体受伤的临界点到来之前进行放松。如何识别机体所能承受的临界点，如何使机体的临界点提高，如何在超过临界点而机体受损后进行及时的修补，是我们生活的重点，也是获得健康的关键。
+   压力存在于生活的各个层面，只要我们生活就必须面对。唯一的办法就是学会在导致机体受伤的临界点到来之前进行放松。如何识别机体所能承受的临界点，如何使机体的临界点提高，如何在超过临界点而机体受损后进行及时的修补，是我们生活的重点，也是获得健康的关键。
+   压力会让生命受损。持续的压力，是造成生命受损的关键。那么，如果我们学会使压力中断或暂停，那么受损就会减轻或延缓。举重运动员无法避免受损，因为他们要冲刺人体极限。一个人举起一个仅仅一公斤的物体，在连续的两小时内不放下，那么，这个人的手臂就会因此受伤。如果他举一下，放一下，休息一下，再举，他就可以反复举很多次。如果他懂得休息和放松，他可以在任何时候，随时可以举起再放下。
+   如果把一个六十岁的人从小到大所走过的路加起来，可能绕地球一周，可是如果让他不休息，从郑州走到长春，二千公里的路程，就可以让他走出各种病来，甚至死亡。
+   人的一生有各种压力，只要我们学会放松，不要让压力超过人体所能承受的压力临界点，或累积到超过临界点，我们就可以使伤害降低到最低限度。
+    人在一呼一吸之间，就有着人体对抗压力的自然机制。当我们紧张的时候，深长而缓慢的吸气，可以有效地帮助放松。打哈欠与伸懒腰，都是身体有效的自我放松方式。从某种意义上讲，生病本身，也是身体在压力累积之后的一种自我放松与修复的表现，包括由生病的方式所做的排毒。实际上，在机体不断地受到伤害时，生病的表现，正是一种有效地终止伤害的措施。尽管这种方式让人不舒服，但是，这正是让你停下来去休息的好办法。
+    生命的表现形式，不是所有人能理解的，有时就像父母的忠告一样不易被接受。我们需要学会与身体沟通，以便懂得配合身体的真正意图，使身体的放松修复过程得以顺利完成。
+      站久了腿不舒服，需要坐。坐久了腰疼，需要站。滚动是应对压力的最有效的方法。圆和滚动，是大自然教给我们的最好提示。圆和滚动，可以让车轮带着沉重的货物跑遍大地。
+      不停地变换应对压力的角度，是一种放松，也是使压力转化成动力的关键。这用于对待工作、生活中的问题也是意义深远。任何坏的东西，如果不持续，就可以获取经验而不是伤害。任何好的东西，持续太久也一样变成负担。
+       阳光照在脸上是舒服的，持续超过临界点就会起癍。风吹拂着，是种享受，持续吹就使皮肤变得干燥。爱，让人幸福，逼得太紧就想逃脱。有时很难说什么是好的，什么又是坏的，事实上事物都是相对的，都有个临界点，都要适可而止，这就是平衡的自然法则。
+      人体健康的道理总是相通的。滚动，是最好的应对压力的办法，也是生存之道。在没有超过临界点之前，及时释放压力，会使基因逐渐了解压力，而进化成新的能力，这是一种适应。当压力不断地刺激身体的某个系统时，只要在临界点前释放掉，在一次又一次的同样的压力来临的时候，基因就产生了记忆，并形成了新的能力。这个机制既复杂又简单，就像一份工作，对新手来说是份压力，不断地面对，就会产生相应的能力，超过临界点，就会无法承受而放弃。
+      如果鞋子里面有一粒沙子，一直不拿出来，身体就会被迫在那个部位长出老茧，以应付这种压力。当时间延长之后，即使把沙子再倒出来，脚板的那个部位，还会很久地保持那个老茧。假使这个人的后代也遇到这种同样的问题，那么，很可能经过几代后，就变成了世代遗传。从另一个角度看，老茧就是一种病，病就是生命的一种学习适应压力的方式。各种疾病都有这种意义。
+      生命的力量，正是大自然的神奇力量，有无限的能力，又极简单。
+
+      滚动，以各种想像的方式，以各种不同的角度，对抗不同的压力。当压力的角度发生变化的时候，这种力量就可以演变成一种支持，压力就会成为让我们进步的力量。
+    让我们在生活学会释放压力,让我们的生活精彩快乐.

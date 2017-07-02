@@ -1,0 +1,18 @@
+暂停 1.目标：网站接入支付宝支付
+
+  pre：及时到账（pc端支付宝支付）demo，已验证通过，
+        //查看帮助网址         https://doc.open.alipay.com/docs/doc.htm?spm=a219a.7629140.0.0.zYV5WC&treeId=62&articleId=104746&docType=1
+
+
+  first：手机网站接入支付宝手机支付
+        //查看帮助网址 	       https://doc.open.alipay.com/docs/doc.htm?spm=a219a.7629140.0.0.cgbEhP&treeId=203&articleId=105285&docType=1
+        how：第一步：创建应用并获取APPID第二步：配置密钥第三步：搭建和配置开发环境
+
+
+
+2.全力关注湘谊微信公众号开发
+
+
+3.需求整理
+   1.支付宝手机支付接入
+   2.

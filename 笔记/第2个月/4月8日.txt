@@ -1,0 +1,270 @@
+遗留难点
+好像解决了 1，power by ECShop 
+关注网址http://www.360doc.com/content/15/0929/15/11411827_502227341.shtml
+OK2.私人订制
+：功能上仍需完善，主要在题词刻字内容上面
+3.微信绑定会员，微信登录不能有瑕疵，多找几个新手机试试
+OK4、发票抬头：（客户填写：个人/公司）
+
+好像不行 5、包装：标准包装/订制包装
+
+small 6.最佳送货时间：多选（工作日、周末、上午/下午/下班后18：00）
+6、支付宝支付
+
+7、授权登录：微信、QQ
+
+
+
+
+主攻：
+OK 私人订制
+：功能上仍需完善，主要在题词刻字内容上面
+
+OK发票抬头：（客户填写：个人/公司）
+
+
+
+
+
+ps:
+私人订制刻字内容方面及发票抬头pc端是好的
+new 问题：
+首页论坛模块是别人的，
+
+
+
+
+
+
+
+知识点：ecshop数据库订单状态判断
+
+order_info 表
+
+刚下完订单
+
+order_status 0
+
+shipping_status 0
+
+pay_status 0
+
+ 
+
+取消
+
+order_status 2
+
+shipping_status 0
+
+pay_status 0
+
+ 
+
+确认
+
+order_status 1
+
+shipping_status 0
+
+pay_status 0
+
+ 
+
+已付款
+
+order_status 1
+
+shipping_status 0
+
+pay_status 2
+
+ 
+
+配货中
+
+order_status 1
+
+shipping_status 3
+
+pay_status 2
+
+ 
+
+已发货
+
+order_status 5
+
+shipping_status 1
+
+pay_status 2
+
+ 
+
+已收货
+
+order_status 5
+
+shipping_status 2
+
+pay_status 2
+
+ 
+
+退货
+
+order_status 4
+
+shipping_status 0
+
+pay_status 0
+
+ 
+
+/* 订单状态 */
+
+define(‘OS_UNCONFIRMED’, 0); // 未确认
+
+define(‘OS_CONFIRMED’, 1); // 已确认
+
+define(‘OS_CANCELED’, 2); // 已取消
+
+define(‘OS_INVALID’, 3); // 无效
+
+define(‘OS_RETURNED’, 4); // 退货
+
+ 
+
+/* 支付类型 */
+
+define(‘PAY_ORDER’, 0); // 订单支付
+
+define(‘PAY_SURPLUS’, 1); // 会员预付款
+
+ 
+
+/* 配送状态 */
+
+define(‘SS_UNSHIPPED’, 0); // 未发货
+
+define(‘SS_SHIPPED’, 1); // 已发货
+
+define(‘SS_RECEIVED’, 2); // 已收货
+
+define(‘SS_PREPARING’, 3); // 备货中
+
+ 
+
+/* 支付状态 */
+
+define(‘PS_UNPAYED’, 0); // 未付款
+
+define(‘PS_PAYING’, 1); // 付款中
+
+define(‘PS_PAYED’, 2); // 已付款
+
+ 
+
+$_LANG['os'][OS_UNCONFIRMED] = ‘未确认’;0
+
+$_LANG['os'][OS_CONFIRMED] = ‘已确认’;1
+
+$_LANG['os'][OS_CANCELED] = ‘ 取消‘;2
+
+$_LANG['os'][OS_INVALID] = ‘无效‘;3
+
+$_LANG['os'][OS_RETURNED] = ‘退货‘;4
+
+ 
+
+$_LANG['ss'][SS_UNSHIPPED] = ‘未发货’;
+
+$_LANG['ss'][SS_PREPARING] = ‘配货中’;
+
+$_LANG['ss'][SS_SHIPPED] = ‘已发货’;
+
+$_LANG['ss'][SS_RECEIVED] = ‘收货确认’;
+
+ 
+
+$_LANG['ps'][PS_UNPAYED] = ‘未付款’;
+
+$_LANG['ps'][PS_PAYING] = ‘付款中’;
+
+$_LANG['ps'][PS_PAYED] = ‘已付款’;
+
+ 
+
+订单的处理判断
+
+ 
+
+  while ($row = $GLOBALS['db']->fetchRow($res))
+
+    {
+
+//
+
+        if ($row['order_status'] == OS_UNCONFIRMED)
+
+        {
+
+            $row['handler'] = "<a href=\"user.php?act=cancel_order&order_id=" .$row['order_id']. "\" onclick=\"if (!confirm('".$GLOBALS['_LANG']['confirm_cancel']."')) return false;\">".$GLOBALS['_LANG']['cancel']."</a>";
+
+        }
+
+        else if ($row['order_status'] == OS_CONFIRMED)
+
+        {
+
+            /* 对配送状态的处理 */
+
+            if ($row['shipping_status'] == SS_SHIPPED)
+
+            {
+
+                @$row['handler'] = "<a href=\"user.php?act=affirm_received&order_id=" .$row['order_id']. "\" onclick=\"if (!confirm('".$GLOBALS['_LANG']['confirm_received']."')) return false;\">".$GLOBALS['_LANG']['received']."</a>";
+
+            }
+
+            elseif ($row['shipping_status'] == SS_RECEIVED)
+
+            {
+
+                @$row['handler'] = '<span style="color:red">'.$GLOBALS['_LANG']['ss_received'] .'</span>';
+
+            }
+
+            else
+
+            {
+
+                if ($row['pay_status'] == PS_UNPAYED)
+
+                {
+
+                    @$row['handler'] = "<a href=\"user.php?act=order_detail&order_id=" .$row['order_id']. '">' .$GLOBALS['_LANG']['pay_money']. '</a>';
+
+                }
+
+                else
+
+                {
+
+                    @$row['handler'] = "<a href=\"user.php?act=order_detail&order_id=" .$row['order_id']. '">' .$GLOBALS['_LANG']['view_order']. '</a>';
+
+                }
+
+ 
+
+            }
+
+        }
+
+        else
+
+        {
+
+            $row['handler'] = '<span style="color:red">'.$GLOBALS['_LANG']['os'][$row['order_status']] .'</span>';
+
+        } 

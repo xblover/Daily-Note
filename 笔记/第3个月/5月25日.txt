@@ -1,0 +1,30 @@
+OK 1，解决了pc网站的一些与湘谊无关的问题，就是pc首页的一些无关标志；
+OK 2，并解决了一些后台bug；
+ok 3，从数据库中提取相关文章数据
+
+余留问题
+紫砂知识页点击更多按钮，加载更多文章
+商城页面根据效果图进行美化
+我的订单中订单状态根据选项卡将订单分为“未付款”“未收款”已收货“”
+
+/**
+ *  获得首页DIY板块内容 by xu
+ *
+ * @access  public
+ * @param   integer     
+ * @return  string
+ */
+function get_diy_content()
+{
+	$sql = 'SELECT content ' .'FROM ' . $GLOBALS['ecs']->table('article'). "WHERE title = '（手机版）首页自定义板块'  ";
+    $res = $GLOBALS['db']->query($sql);
+
+    while ($row = $GLOBALS['db']->fetchRow($res))
+    {
+		return $row['content'];
+	}
+	
+}
+
+
+

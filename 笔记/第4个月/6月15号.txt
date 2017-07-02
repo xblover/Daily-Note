@@ -1,0 +1,11 @@
+1.网站视频播放；优酷方法解决
+搁置 2，搭建一个Flv视频播放服务器
+在互联网上播放视频，有两种方式，一种是文件方式，即通过HTTP协议访问视频文件，这种方式的缺点是不能从特定的帧开始播放；另外一种就是采用专 门的流媒体服务器，这种方式的缺点是要搭建复杂的流媒体服务器。
+一个Flv播放器就是 JW FLV Media Player（也称为 jwplayer）。它的网址是：
+http://www.longtailvideo.com/players/jw-flv-player/
+http://www.cnblogs.com/chenhaib/archive/2012/12/21/2827959.html
+
+3，职称填充数据
+
+
+4，id=147，144，发结拍提醒

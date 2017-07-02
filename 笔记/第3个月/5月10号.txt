@@ -1,0 +1,51 @@
+如何能够拍卖结束的时候给拍中发竞拍成功的消息
+1.找到竞拍结束的时间点设置定时任务，当结拍时间为零时，给最高出价者发消息
+  
+2.最高出价者信息易获取，fe_bid_log.first 根据竞拍名字查数据库获取wxid
+
+
+ 什么时候执行拍卖结束的通知？
+拍卖结束的时候给最高出价者发消息
+
+
+
+
+
+
+
+
+
+
+
+
+
+OK 竞拍价格被超越部分代码
+//--------通知最近的一位出价者，价格被超越 -------start-----add by xu vv------
+	$wxch_user_id = $auction['last_bid']['bid_user'];
+	$access_token = access_token($db);
+	$query_sql = "SELECT wxid FROM " . $ecs->table('users') . " WHERE user_id = '$wxch_user_id'";
+	$ret_w = $db->getRow($query_sql);
+	//微信用户的识别标志，wxid
+	$wxid = $ret_w['wxid'];
+	$w_url = "http://www.mjzisha.com/mobile/auction.php?act=view&id=".$auction['act_id'];
+	$paimai_goods_name = $auction['goods_name'];
+	$new_paimai_price = $bid_price."元";
+	//模板消息
+	$template = array(
+            'touser' => $wxid,
+            'template_id' => "Jmc79X2Foeij8inlrdf2QskdXpTc0F81dM3tvsKy-kU",
+            'url' => $w_url,
+            'topcolor' => "#743A3A",
+            'data' => array(
+                'first'=>array('value'=>urlencode("您好，您的商品出价已被超越"),'color'=>"#743A3A"),
+                'keyword1'=>array('value'=>urlencode($paimai_goods_name),'color'=>'#000000'),
+				'keyword2'=>array('value'=>urlencode($new_paimai_price),'color'=>'#000000'),
+                'remark'=>array('value'=>urlencode('快去看看吧，感谢您的关注'),'color'=>'#000000'),
+            )
+        );
+	$json_template=json_encode($template);
+	$url="https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=".$access_token;
+	$res=http_request($url,urldecode($json_template));
+	//if (is_array($res) &&$res['errcode']==0)
+	//echo "发送模板成功";
+	//------------------------------end--------------------

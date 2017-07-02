@@ -1,0 +1,11 @@
+pdo数据对象复习;
+$dbms = 'mysql';
+$host = 'localhost';
+$dbName = 'test';
+$user = 'root';
+$pass = '';
+$dsn = "$dbms:host=$host;dbname=$dbName";
+
+
+
+

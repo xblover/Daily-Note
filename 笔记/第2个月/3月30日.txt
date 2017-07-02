@@ -1,0 +1,395 @@
+ok 1.使用微信支付，用那个新版的微信支付插件就可以实现支付了，中间需要修复一些代码bug
+
+
+Q:支付授权目录与测试授权目录
+A:其实切换很简单，使用测试授权目录还是使用支付授权目录微信是根据调用支付时的url来匹配的，谁的匹配度越高就是哪个。
+
+如：
+
+支付授权目录:http://domain/projectName/controller/
+
+测试授权目录：http://domain/projectName/controller/api/
+
+如果你调用支付的api是http://domain/projectName/controller/api/，那么微信会认为是测试，这个时候就会验证此微信号是否处于白名单中，如果在可以调用支付，如果不在白名单中就不行。
+
+
+no 2.微信支付后订单状态未修改，还是未付款的状态；
+
+
+
+
+
+yes 3.PHP语言中的解决Undefined variable: _SESSION的方法
+本文为大家介绍解决PHP使用SESSION报错的方法。对于初次使用session的人来说可能会遇到Undefined variable: _SESSION这样的错误，错误原因是因为没有开启session。因为php中的session默认是不开启的，需要在程序中开启才能使用。PHP错误：PHP Notice: Undefined variable: _SESSION原因及解决方法遇到Undefined variable: _SESSION 错误的原因是php session没有开启引起的。
+下面有两种解决办法.
+1. 在程序里添加session_start()函数
+2.在php.ini里将session.auto_start = 0设置为session.auto_start = 1
+以上就是解决Undefined variable: _SESSION的方法。
+
+知识点：ecshop数据库订单状态判断
+
+order_info 表
+
+刚下完订单
+
+order_status 0
+
+shipping_status 0
+
+pay_status 0
+
+ 
+
+取消
+
+order_status 2
+
+shipping_status 0
+
+pay_status 0
+
+ 
+
+确认
+
+order_status 1
+
+shipping_status 0
+
+pay_status 0
+
+ 
+
+已付款
+
+order_status 1
+
+shipping_status 0
+
+pay_status 2
+
+ 
+
+配货中
+
+order_status 1
+
+shipping_status 3
+
+pay_status 2
+
+ 
+
+已发货
+
+order_status 5
+
+shipping_status 1
+
+pay_status 2
+
+ 
+
+已收货
+
+order_status 5
+
+shipping_status 2
+
+pay_status 2
+
+ 
+
+退货
+
+order_status 4
+
+shipping_status 0
+
+pay_status 0
+
+ 
+
+/* 订单状态 */
+
+define(‘OS_UNCONFIRMED’, 0); // 未确认
+
+define(‘OS_CONFIRMED’, 1); // 已确认
+
+define(‘OS_CANCELED’, 2); // 已取消
+
+define(‘OS_INVALID’, 3); // 无效
+
+define(‘OS_RETURNED’, 4); // 退货
+
+ 
+
+/* 支付类型 */
+
+define(‘PAY_ORDER’, 0); // 订单支付
+
+define(‘PAY_SURPLUS’, 1); // 会员预付款
+
+ 
+
+/* 配送状态 */
+
+define(‘SS_UNSHIPPED’, 0); // 未发货
+
+define(‘SS_SHIPPED’, 1); // 已发货
+
+define(‘SS_RECEIVED’, 2); // 已收货
+
+define(‘SS_PREPARING’, 3); // 备货中
+
+ 
+
+/* 支付状态 */
+
+define(‘PS_UNPAYED’, 0); // 未付款
+
+define(‘PS_PAYING’, 1); // 付款中
+
+define(‘PS_PAYED’, 2); // 已付款
+
+ 
+
+$_LANG['os'][OS_UNCONFIRMED] = ‘未确认’;0
+
+$_LANG['os'][OS_CONFIRMED] = ‘已确认’;1
+
+$_LANG['os'][OS_CANCELED] = ‘ 取消‘;2
+
+$_LANG['os'][OS_INVALID] = ‘无效‘;3
+
+$_LANG['os'][OS_RETURNED] = ‘退货‘;4
+
+ 
+
+$_LANG['ss'][SS_UNSHIPPED] = ‘未发货’;
+
+$_LANG['ss'][SS_PREPARING] = ‘配货中’;
+
+$_LANG['ss'][SS_SHIPPED] = ‘已发货’;
+
+$_LANG['ss'][SS_RECEIVED] = ‘收货确认’;
+
+ 
+
+$_LANG['ps'][PS_UNPAYED] = ‘未付款’;
+
+$_LANG['ps'][PS_PAYING] = ‘付款中’;
+
+$_LANG['ps'][PS_PAYED] = ‘已付款’;
+
+ 
+
+订单的处理判断
+
+ 
+
+  while ($row = $GLOBALS['db']->fetchRow($res))
+
+    {
+
+//
+
+        if ($row['order_status'] == OS_UNCONFIRMED)
+
+        {
+
+            $row['handler'] = "<a href=\"user.php?act=cancel_order&order_id=" .$row['order_id']. "\" onclick=\"if (!confirm('".$GLOBALS['_LANG']['confirm_cancel']."')) return false;\">".$GLOBALS['_LANG']['cancel']."</a>";
+
+        }
+
+        else if ($row['order_status'] == OS_CONFIRMED)
+
+        {
+
+            /* 对配送状态的处理 */
+
+            if ($row['shipping_status'] == SS_SHIPPED)
+
+            {
+
+                @$row['handler'] = "<a href=\"user.php?act=affirm_received&order_id=" .$row['order_id']. "\" onclick=\"if (!confirm('".$GLOBALS['_LANG']['confirm_received']."')) return false;\">".$GLOBALS['_LANG']['received']."</a>";
+
+            }
+
+            elseif ($row['shipping_status'] == SS_RECEIVED)
+
+            {
+
+                @$row['handler'] = '<span style="color:red">'.$GLOBALS['_LANG']['ss_received'] .'</span>';
+
+            }
+
+            else
+
+            {
+
+                if ($row['pay_status'] == PS_UNPAYED)
+
+                {
+
+                    @$row['handler'] = "<a href=\"user.php?act=order_detail&order_id=" .$row['order_id']. '">' .$GLOBALS['_LANG']['pay_money']. '</a>';
+
+                }
+
+                else
+
+                {
+
+                    @$row['handler'] = "<a href=\"user.php?act=order_detail&order_id=" .$row['order_id']. '">' .$GLOBALS['_LANG']['view_order']. '</a>';
+
+                }
+
+ 
+
+            }
+
+        }
+
+        else
+
+        {
+
+            $row['handler'] = '<span style="color:red">'.$GLOBALS['_LANG']['os'][$row['order_status']] .'</span>';
+
+        } 
+
+
+知识点：
+伪静态
+伪静态又名URL重写，是动态的网址看起来像静态的网址。换句话说就是，动态网页通过重写 URL 方法实现去掉动态网页的参数，但在实际的网页目录中并没有必要实现存在重写的页面。
+动态、静态、伪静态之间的利与弊（新）
+
+动态网址
+
+首先，动态网址目前对于Google来说，“不能被抓取”的说法是错误的，Google能够很好的处理动态网址并顺利抓取；其次“参数不能超过3个”的说法也不正确，Google能够抓取参数超过3个的动态网址，不过，为了避免URL太长应尽量减少参数。
+
+其次，动态网址有其一定的优势，以上面所说的 news.php？lang=cn&class=1&id=2 为例，网址中的参数准确的告诉Google，此URL内容语言为cn、隶属于分类1、内容ID为2，更便于Google对内容的识别处理。
+
+最后，动态网址应尽量精简，特别是会话标识（sid）和查询（query）参数，容易造成大量相同页面。
+
+静态网址
+
+首先，静态网址具有的绝对优势是其明晰，/product/nokia/n95.html和/about.html可以很容易被理解，从而在搜索结果中可能点击量相对较高。
+
+其次，静态网址未必就是最好的网址形式，上述动态网址中说到，动态网址能够告诉Google一些可以识别的参数，而静态网址如果文档布置不够恰当（如：过于扁平化，将HTML文档全放在根目录下）及其他因素，反而不如静态网址为Google提供的参考信息丰富。
+
+最后，樂思蜀觉得Google此文中是否有其隐藏含义？“更新此种类型网址的页面会比较耗费时间，尤其是当信息量增长很快时，因为每一个单独的页面都必须更改编译代码。”虽然所说的是网站，但在Google系统中是否同样存在这样的问题呢？
+
+伪静态网址
+
+首先，伪静态网址不能让动态网址“静态化”，伪静态仅仅是对动态网址的一个重写，Google不会认为伪静态就是HTML文档。
+
+其次，伪静态可取，但应把重心放在去除冗余参数、规范URL、尽可能的避免重复页上。
+
+最后，伪静态有很大潜大危险，最好在对网站系统、网站结构、内容分布、参数意义熟悉的情况下使用。
+
+在写伪静态规则时，应保留有价值的参数，不要将有价值的参数全部精简掉，如前面例子中的 news.php？lang=cn&class=1&id=2 最好重写为 news-cn-class1-id2.html，而不是过份精简重写为 news-2.html。
+
+再就是伪静态中一定不能包含会话标识（sid）和查询（query）参数，/product.asp？sid=98971298178906&id=1234 这样的动态网址，其中的sid本来Google能够识别并屏蔽，但如果重写为 /product/98971298178906/1234，Google不但无法识别，还在整站中造成无限重复页面（每个会话都会产生一个新的会话ID）。
+
+
+ str_replace函数详解
+
+      在开发过程中，字符串的操作是很频繁的，这几天有看PHP手册中讲解str_replace函数的讲解，不是很明白，特作如下笔记，以作备忘。
+
+      函数原型：mixed str_replace ( mixed $search , mixed $replace , mixed $subject [, int &$count ] )
+
+参数说明：$search要被搜索替换的字符串，$replace要替换搜索的字符串，$subject操作的字符串，&$count替换次数。
+
+      访函数返回在$subject搜索$search替换为$replace的字符串或数组。
+
+ 
+
+1、 $search和$replace都是字符串
+
+ 
+
+示例：str_replace("a", "apple", "I like eat apple.");
+
+说明：在$subject中将$search字符串替换为$replace字符串即可。
+
+返回："I like eapplet applepple."。
+
+ 
+
+ 
+
+2、$search为数组
+
+ 
+
+示例：str_replace(array("a", "p"), "apple", "I like eat apple.");
+
+说明：在$subject中将$search数组中的各个字符串元素依次分别替换为中$replace字符串即可。
+
+返回："I like eaappleapplelet aappleappleleappleapplele."。
+
+ 
+
+3、$replace为数组
+
+ 
+
+示例：str_replace("a",  array("apple", "pear"), "I like eat apple.");
+
+说明：在$subject中将$search字符串替换为Array即可。
+
+返回："I like eArrayt Arraypple."。
+
+ 
+
+4、$subject为数组
+
+ 
+
+示例：str_replace("a", "apple", array("I like eat app.", "I like eat pear."));
+
+说明：返回值为数组，将$subject中的各元素分别用$search替换为$replace的值进行替换。
+
+返回：Array ( [0] => I like eapplet applepp. [1] => I like eapplet peappler. )。
+
+ 
+
+ 
+
+5、$search和$replace都为数组
+
+示例：str_replace(array("a", "p"), array("apple", "pear"), "I like eat apple.");
+
+说明：在$subject中将$search的各元素值依次分别替换为$replace的各元素值。
+
+返回："I like eapearpearlet apearpearlepearpearle."
+
+其中：
+
+如果$search的数组值比$replace的数组值长，
+
+str_replace(array("a", "p", "b"), array("apple", "pear"), "I like eat apple && b.");
+
+ 将$search中多出来的数组元素在$replace中匹配的字符串替换为空串，返回"I like eapearpearlet apearpearlepearpearle && ."。
+
+ 
+
+如果$replace的数组值比$search的数组值长，
+
+str_replace(array("a", "p"), array("apple", "pear", "banana"), "I like eat apple && b.");
+
+$replace中多出来的数组元素将被忽略。返回"I like eapearpearlet apearpearlepearpearle && b."。
+
+ 
+
+6、$search、$replace和$subject都为数组
+
+示例：str_replace(array("a", "p"), array("apple", "pear"), array("I like eat apple.", "I like eat pear"));
+
+说明：在$subject中将$search各元素的值依次分别替换为$replace的值，然后进行替换。
+
+返回：Array ( [0] => I like eapearpearlet apearpearlepearpearle. [1] => I like eapearpearlet peareapearpearler ) 
+
+ 
+简单做人，勤奋做事，永不言弃。

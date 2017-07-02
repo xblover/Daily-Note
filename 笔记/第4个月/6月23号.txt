@@ -1,0 +1,77 @@
+1.会员从数据库，整理显示到后台，能够修改会员信息资料等等，最终目的能给用户发短信
+过滤掉     2.象过河短信功能过滤，以便进行网站短信功能整合，
+好像不行   3.象过河看能否关联网站数据库，整合订单，商品数据信息
+暂时应该是好了 多测试4.暂时关掉个人中心中的登录注册环节，换成单一的微信一键登录，为用户省去繁琐的操作
+一更受欢迎，二，我们这边方便管理，也不用那么多步骤了，注重安全性
+把用户当傻瓜，简便用户操作
+5.微信通这边最好能获取用户的微信号，以方便联系
+
+
+6.整理ECShop的短信发送功能
+
+
+
+
+
+<!--头部e-->
+
+<style>
+#wrapper {
+	background-color: #c40000;
+	color:#ffffff;
+	font-size:14px;
+	font-weight:bold;
+	text-algin:center;
+}
+#classify {
+	width:100%;
+	vertical-align:middle;
+	height:65px;
+	margin-bottom:30px;
+}
+.flex_in {
+	height:30px;
+	
+}
+.flex_in img {
+	width:60px;
+	height:60px;
+}
+</style>
+<div class="banner" style="margin-top:48px;">
+<img style="width:100%;" src="images/app_index_01.png" />
+</div>
+<div id="wrapper">
+
+<!--content s-->
+<div id=content class="wrap">
+  <!--搜索区域-->
+   <div id="search_box2" style="padding:0 0.6rem;">
+      <div class="search_box" >
+        <form method="post" action="search.php" name="searchForm" id="searchForm_id">
+          <input placeholder="请输入要搜索的商品" name="keywords" type="text" id="keywordBox" />
+          <button class="ico_07" type="submit" onclick="return check('keywordBox')"> </button>
+        </form>
+      </div>
+    </div>
+
+  <!--快速连接s-->
+  <div id="classify"  >
+    <ul class="flex flex-f-row">
+      <li class="flex_in"> <a href="index.php" title="{$nav.name}"> <img src="images/app_index__04.png" /> </a>
+        <p > 紫砂商城</p>
+      </li>
+      <li class="flex_in" > <a href="auction.php" title="{$nav.name}"> <img src="images/app_index_06.png" /> </a>
+        <p > 拍卖专题 </p>
+      </li>
+	  <li class="flex_in" > <a href="mingjia.php" title="{$nav.name}"> <img src="images/app_index_08.png" /> </a>
+        <p > 紫砂名家 </p>
+      </li>
+	  <li class="flex_in" > <a href="read.php?act=read"  title="{$nav.name}"> <img src="images/app_index_10.png" /> </a>
+        <p > 紫砂知识 </p>
+      </li>
+    </ul>
+  </div>
+  <!--快速连接e-->
+</div>
+<!--content e--> 

@@ -1,0 +1,60 @@
+OK  紫砂知识页点击更多按钮，加载更多文章
+OK   商城页面根据效果图进行美化
+已布好局，就差显示了  我的订单中订单状态根据选项卡将订单分为“未付款”“未收款”已收货“”
+
+
+网站! 网站！网站！
+把工作当成一修行，就会感觉不到那么累了，自我积累和认识也会大大提高
+
+////////工艺师称号，及查看全部！
+<header>
+        <span>
+            {$goods_cat.name|escape:html}
+        </span>
+        <a href="{$goods_cat.url}" class="ico_04 more">
+        </a>
+</header>
+
+
+
+<!-- {if $article_categories} --> 
+    <!--{foreach from=$article_cat item=cat name="article_cat"}--> 
+    <a href="article_cat.php?id={$cat.cat_id}" class="clearfix"> <span>{$cat.cat_name|escape:html}</span><i></i> </a> 
+    <!--{/foreach}--> 
+    <!--{else}--> 
+    <!-- {foreach from=$artciles_list item=article name="artciles_list"} --> 
+    <a href="{$article.url}" class="clearfix"> <span>{$article.short_title}</span><i></i> </a> 
+    <!-- {/foreach} --> 
+    <!-- {/if} --> 
+
+
+
+
+
+
+
+
+
+/**
+ *  获得首页DIY板块内容 by xu
+ *
+ * @access  public
+ * @param   integer     
+ * @return  string
+ */
+function get_diy_content()
+{
+	$sql = 'SELECT content ' .'FROM ' . $GLOBALS['ecs']->table('article'). "WHERE title = '（手机版）首页自定义板块'  ";
+    $res = $GLOBALS['db']->query($sql);
+
+    while ($row = $GLOBALS['db']->fetchRow($res))
+    {
+	     return $row['content'];
+     }
+}
+
+
+
+文章列表页，文章分页模块
+<!-- #BeginLibraryItem "/library/pages.lbi" --><!-- #EndLibraryItem -->
+

@@ -1,0 +1,151 @@
+ok 1.手机版后台--》系统设置--》菜单管理--》添加导航/编辑出现bug
+2.目标：把编辑框的内容存到数据库里面
+分析以前的编辑框是怎么进行数据传递的，，，
+3.网站优化工作
+网站优化工作：徐波
+
+公众号菜单“进入网站”取消二级入口（在首页内容完善后修改）
+
+
+首页：四个分类模块调整为：
+1）紫砂商城：跳转至商城页；
+2）拍卖专题：跳转至拍卖页；
+3）紫砂名家：等待新建；
+4）紫砂知识：跳转至文章页；
+
+
+网站菜单：名称调整如下
+1）商城改为紫砂商城
+2）阅读改为紫砂知识
+
+
+拍卖专题页：细节优化如下：
+1）微信窗口标题“拍卖活动”改成“湘誼·拍卖专题”
+2）网站窗口标题“拍卖”改成“零元起拍·会员专享”
+3）解决图片变形问题（实际尺寸/比例出错）
+4）海报与条幅间的细缝线，去掉；
+5）“该拍卖活动已结束”改成“本作品已结拍”并字体加粗
+6）结束作品保留两天，在图框上打印章“已结拍”
+
+
+拍卖单品页：细节优化如下
+
+(no)1）图片按钮改成缩略图；
+
+2）已结束拍品中“正在拍卖”改成“拍卖结束”；“距结拍……结束”改成“本作品已结拍,谢谢关注！”
+3）“我要出价”字体加大，与“正在拍卖”一样；
+4）出价纪录中，结束后的“领先”变成“胜出”；
+
+
+商品详情页：参照设计效果
+1）卖点文字加大,红色显示；
+2）详情选项卡显示样式参照效果调整；
+goods.php
+
+$goods= array（）；
+/* 创建 html editor2 作者详情*/
+    create_html_kindeditor('author_details', $goods['author_details']);
+function create_html_kindeditor($input_name, $input_value = '')
+{
+
+	global $smarty;
+	
+    $kindeditor="
+<textarea id=\"$input_name\" name=\"$input_name\" style='width:100%;height:300px;'>$input_value</textarea>
+<script charset='utf-8' src='../includes/kindeditor/kindeditor-all-min.js'></script>
+<script>
+	var editor;
+	KindEditor.ready(function(K) {
+		window.editor = K.create('textarea[name=\"$input_name\"]', {
+			allowFileManager : true,	//浏览远程服务器按钮
+			width : '100%',	//宽
+			height : '320px',	//高
+			resizeType : 2,	//2或1或0，2时可以拖动改变宽度和高度，1时只能改变高度，0时不能拖动
+			afterBlur : function(){this.sync();}	//afterBlur当失去焦点时执行 this.sync(); ->取得textarea的value
+		});
+	});
+</script>";
+
+   $smarty->assign('FCKeditor2', $kindeditor);  //这里前面的 FCKEditor 不要变 
+}
+
+
+goods_info.htm
+ <tr>
+            <td>关于作者：</td>
+         </tr>
+		 <tr>
+          <td>
+		  {$FCKeditor2}
+		  </td>
+        </tr>
+  <input type="button" value="{$lang.button_submit}" class="button" onclick="validate('{$goods.goods_id}')" />
+document.forms['theForm'].submit();
+
+
+$_POST[author_details]是关键，，
+作者详情是怎么插入到数据库的呢？？？
+
+插入数据库
+ $sql = "INSERT INTO " . $ecs->table('goods') . " (goods_name, goods_name_style, goods_sn, " .
+                    "cat_id, brand_id, shop_price, market_price, is_promote, promote_price, " .
+                    "promote_start_date, promote_end_date, goods_img, goods_thumb, original_img, keywords, goods_brief, " .
+                    "seller_note, goods_weight, goods_number, warn_number, integral, give_integral, is_best, is_new, is_hot, " .
+                    "is_on_sale, is_alone_sale, is_shipping, goods_desc, author_details, pug_details, add_time, last_update, goods_type, rank_integral, suppliers_id)" .
+                "VALUES ('$_POST[goods_name]', '$goods_name_style', '$goods_sn', '$catgory_id', " .
+                    "'$brand_id', '$shop_price', '$market_price', '$is_promote','$promote_price', ".
+                    "'$promote_start_date', '$promote_end_date', '$goods_img', '$goods_thumb', '$original_img', ".
+                    "'$_POST[keywords]', '$_POST[goods_brief]', '$_POST[seller_note]', '$goods_weight', '$goods_number',".
+                    " '$warn_number', '$_POST[integral]', '$give_integral', '$is_best', '$is_new', '$is_hot', '$is_on_sale', '$is_alone_sale', $is_shipping, ".
+                    " '$_POST[goods_desc]', '$_POST[author_details]', '$_POST[pug_details]', '" . gmtime() . "', '". gmtime() ."', '$goods_type', '$rank_integral', '$suppliers_id')";
+更新数据库
+$sql = "UPDATE " . $ecs->table('goods') . " SET " .
+                "goods_name = '$_POST[goods_name]', " .
+                "goods_name_style = '$goods_name_style', " .
+                "goods_sn = '$goods_sn', " .
+                "cat_id = '$catgory_id', " .
+                "brand_id = '$brand_id', " .
+                "shop_price = '$shop_price', " .
+                "market_price = '$market_price', " .
+                "is_promote = '$is_promote', " .
+                "promote_price = '$promote_price', " .
+                "promote_start_date = '$promote_start_date', " .
+                "suppliers_id = '$suppliers_id', " .
+                "promote_end_date = '$promote_end_date', ";
+
+        /* 如果有上传图片，需要更新数据库 */
+        if ($goods_img)
+        {
+            $sql .= "goods_img = '$goods_img', original_img = '$original_img', ";
+        }
+        if ($goods_thumb)
+        {
+            $sql .= "goods_thumb = '$goods_thumb', ";
+        }
+        if ($code != '')
+        {
+            $sql .= "is_real=0, extension_code='$code', ";
+        }
+        $sql .= "keywords = '$_POST[keywords]', " .
+                "goods_brief = '$_POST[goods_brief]', " .
+                "seller_note = '$_POST[seller_note]', " .
+                "goods_weight = '$goods_weight'," .
+                "goods_number = '$goods_number', " .
+                "warn_number = '$warn_number', " .
+                "integral = '$_POST[integral]', " .
+                "give_integral = '$give_integral', " .
+                "rank_integral = '$rank_integral', " .
+                "is_best = '$is_best', " .
+                "is_new = '$is_new', " .
+                "is_hot = '$is_hot', " .
+                "is_on_sale = '$is_on_sale', " .
+                "is_alone_sale = '$is_alone_sale', " .
+                "is_shipping = '$is_shipping', " .
+                "goods_desc = '$_POST[goods_desc]', " .
+				"author_details = '$_POST[author_details]', " .
+				"pug_details = '$_POST[pug_details]', " .
+                "last_update = '". gmtime() ."', ".
+                "goods_type = '$goods_type' " .
+                "WHERE goods_id = '$_REQUEST[goods_id]' LIMIT 1";
+    }
+    $db->query($sql);

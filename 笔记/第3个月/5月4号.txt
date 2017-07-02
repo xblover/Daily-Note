@@ -1,0 +1,35 @@
+OK 1.拍卖用户列表信息显示可以这样解决，若会员注册了微信，取微信名字微信头像为first，二则取用户注册会员的名字，头像选取默认头像
+2.新首页自定义板块
+
+$module = array(
+	'diyMoudle1' => '',
+	'diyMoudle2' => '',
+	'diyMoudle3' => '',
+	'diyMoudle4' => '',
+	'diyMoudle5' => '',
+	'diyMoudle6' => '',
+	);
+/* 创建 html editor  商品详情*/
+    create_html_editor('diyMoudle1', $module['diyMoudle1']);
+/* 创建 html editor  商品详情*/
+    create_html_editor('diyMoudle2', $module['diyMoudle2']);
+/* 创建 html editor  商品详情*/
+    create_html_editor('diyMoudle3', $module['diyMoudle3']);
+/* 创建 html editor  商品详情*/
+    create_html_editor('diyMoudle4', $module['diyMoudle5']);
+/* 创建 html editor  商品详情*/
+    create_html_editor('diyMoudle5', $module['diyMoudle6']);
+/* 创建 html editor  商品详情*/
+    create_html_editor('diyMoudle6', $module['diyMoudle6']);
+
+$sql = "INSERT INTO".$ecs->table('touch_homepage')."(diyMoudle1,diyMoudle2,diyMoudle3,diyMoudle4,diyMoudle5,diyMoudle6)"."VALUES ('$_POST[diyMoudle1]', '$_POST[diyMoudle2]', '$_POST[diyMoudle3]', '$_POST[diyMoudle4]', '$_POST[diyMoudle5]', '$_POST[diyMoudle6]')"
+
+ $db->query($sql);
+
+
+
+ecshop 缓存了解
+
+
+
+

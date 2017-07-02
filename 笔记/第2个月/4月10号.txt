@@ -1,0 +1,51 @@
+1.PC拍卖功能如何移到手机端；
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+tips:
+将telephone=no，则手机号码不被显示为拨号链接
+<meta content="telephone=no" name="format-detection" />
+?网站开启对web app程序的支持。
+<meta name="apple-mobile-web-app-capable" content="yes" />
+?在web app应用下状态条（屏幕顶部条）的颜色；
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+在iPhone的浏览器中页面将以原始大小显示，不允许缩放。  
+<meta name="viewport" content="width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="apple-touch-icon-precomposed" href="images/apple-touch-icon.png"/>
+
+
+
+ECshop模板机制整理
+一、模板引擎：
+
+ECshop给我的第一印象是用的smarty模板引擎，可是很快就发现有些不一样，使用smarty模板引擎的系统通常会至少会包括smarty的核心文件：smarty.class.php、smarty_Compiler.php、config_File.class.php和debug.tpl，而在ECshop中并没用发现smarty的核心类。还是通过程序寻找答案吧，在前台或者后台的公用文件init.php中$smarty对象的初始化中，可以看到加载的模板引擎文件是cls_template.php，原来ECshop团队对smarty的核心部分做了整理及修改，这个引擎相对更加精简，但是使用的时候可能需要注意，不是所有的smarty语法都可以在ECshop中使用，要使用还需修改模板引擎。
+
+二、数据处理：
+
+ECshop根目录下及admin目录下的文件是对应前台、后台页面的数据处理页，在这些文件中对页面所要展示的内容进行处理，之后通过smarty的assign()方法注册变量，最后通过display()方法加载相应的模板文件。但这里我们需要注意ECshop单独封装的几个方法，用于处理模板的公共内容及页面中某些动态内容的加载。如lib_main.php中的assign_template()会设置我们的网店的公共信息及网站设置；assign_dynamic()方法则是设置该页面中的动态加载内容。当页面所需的变量设置完成后，进入smarty的display()方法。
+
+三、解析模板
+
+首先，在ECshop中有.dwt和.lbi两种格式的模板文件，那么这两种文件之间是什么关系呢？可以这样理解.dwt文件是针对前台每个显示页面的模板“框架”，而.lbi模板中则是对页面中公共“内容”的整理，每个.lbi文件都是页面中的一个模块。二者是怎样关联到一起的呢？在模板文件夹中有一个libs.xml文件，这里则是具体配置每个模板“框架”中可以显示哪些“内容”（具体内容之后谈及模板管理会细说）。
+
+下面查看解析模板的过程，在.dwt文件中根据框架的设计会划分出几个“可编辑区域”，.lbi模板正是加载到“可编辑区域”中进行输出的。那么我们需要注意的是.dwt模板中的几对标签：
+
+①<!-- TemplateBeginEditable name="右边主区域" --><!-- TemplateEndEditable -->这对标签就是“可编辑区域”标签，在这对标签之间输出的内容是可以通过模板管理进行设置的。主要是选择输出不同的.lbi文件。
+
+②<!-- #BeginLibraryItem "/library/page_header.lbi" --><!-- #EndLibraryItem -->这对标签则是对相应的page_header.lbi文件的加载及输出。这个头部的模板每个页面都需要加载，如果我们想更改模板中的头部内容，只要修改page_header.lbi即可，大大提高了效率。
+
+模板文件加载完成之后，即可通过smarty引擎解析smarty标签，完成模板的输出。
